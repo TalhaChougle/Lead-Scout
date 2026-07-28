@@ -177,7 +177,7 @@ function resolveLeadContactInfo(existingPhone, existingEmail) {
   };
 }
 
-// Helper: Filter out residential places unless real shop/amenity/office exists
+// Helper: Filter out non-business features like roads, highways, and residential areas
 function isGenuineBusinessTag(tags = {}, cls = "", type = "") {
   const name = tags.name || "";
   if (!name || name.length < 2) return false;
@@ -187,18 +187,37 @@ function isGenuineBusinessTag(tags = {}, cls = "", type = "") {
   const c = (cls || tags.class || "").toLowerCase();
   const t = (type || tags.type || "").toLowerCase();
 
+  // Reject infrastructure, roads, highways, administrative boundaries, natural features
+  if (c === "highway" || c === "place" || c === "boundary" || c === "waterway" || c === "natural" || c === "landuse") {
+    if (!tags.shop && !tags.amenity && !tags.office && !tags.craft && !tags.tourism) {
+      return false;
+    }
+  }
+
+  if (tags.highway && !tags.shop && !tags.amenity && !tags.office) {
+    return false;
+  }
+
+  // Reject generic street/road names if no specific shop/amenity tag is present
+  const nLower = name.toLowerCase().trim();
+  const streetSuffixes = ["road", "rd", "street", "st", "marg", "lane", "path", "avenue", "ave", "boulevard", "highway", "chowk", "circle", "flyover", "bypass", "expressway"];
+  const isStreetName = streetSuffixes.some((suf) => nLower.endsWith(" " + suf) || nLower === suf);
+
+  if (isStreetName && !tags.shop && !tags.amenity && !tags.office) {
+    return false;
+  }
+
   const resTypes = ["residential", "apartments", "house", "residential_area", "detached", "terrace"];
 
-  const hasShop = Boolean(tags.shop || c === "shop" || t.includes("shop"));
+  const hasShop = Boolean(tags.shop || (c === "shop" && !isStreetName) || (t.includes("shop") && c !== "highway"));
   const hasAmenity = Boolean(
     tags.amenity ||
-    c === "amenity" ||
-    ["restaurant", "fast_food", "cafe", "bistro", "pub", "bar", "clinic", "dentist", "pharmacy", "bank", "fuel", "cinema"].includes(t)
+    (c === "amenity" && ["restaurant", "fast_food", "cafe", "bistro", "pub", "bar", "clinic", "dentist", "pharmacy", "bank", "fuel", "cinema", "hospital"].includes(t)) ||
+    (["restaurant", "fast_food", "cafe", "bistro", "pub", "bar", "clinic", "dentist", "pharmacy", "bank", "fuel", "cinema"].includes(t) && c !== "highway" && !isStreetName)
   );
-  const hasOffice = Boolean(tags.office || c === "office");
+  const hasOffice = Boolean(tags.office || (c === "office" && !isStreetName));
   const hasLeisure = Boolean(
-    c === "leisure" ||
-    c === "tourism" ||
+    (c === "leisure" || c === "tourism") &&
     ["fitness_centre", "sports_centre", "hairdresser", "beauty", "spa", "hotel"].includes(t)
   );
 
@@ -617,7 +636,7 @@ function splitBboxIntoGrid(bbox, maxCellSizeDeg = 0.045) {
 
 // 💾 LocalStorage & In-Memory Stale Cache Helpers
 function getCacheKey(country, city, niche) {
-  return `leadscout_cache_v10:${(country || "").toLowerCase().trim()}:${(city || "").toLowerCase().trim()}:${(niche || "").toLowerCase().trim()}`;
+  return `leadscout_cache_v12:${(country || "").toLowerCase().trim()}:${(city || "").toLowerCase().trim()}:${(niche || "").toLowerCase().trim()}`;
 }
 
 function loadCachedCityLeads(country, city, niche) {
@@ -765,9 +784,11 @@ async function fastSearchShops(country, city, niche, forceRefresh = false, onPro
         tags.healthcare ||
         "Local Business";
 
-      const street = tags["addr:street"] || tags["addr:suburb"] || tags["addr:neighbourhood"] || "";
+      const house = tags["addr:housenumber"] || tags["addr:housename"] || tags["addr:unit"] || tags["addr:door"] || "";
+      const street = tags["addr:street"] || tags["addr:road"] || "";
+      const area = tags["addr:suburb"] || tags["addr:neighbourhood"] || tags["addr:place"] || tags["addr:district"] || "";
       const cityStr = tags["addr:city"] || city;
-      const fullAddr = [street, cityStr, country].filter(Boolean).join(", ");
+      const fullAddr = tags["addr:full"] || [house, street, area, cityStr, country].filter(Boolean).join(", ");
 
       return {
         id: `${el.type}-${el.id}`,
@@ -814,13 +835,18 @@ async function fastSearchShops(country, city, niche, forceRefresh = false, onPro
 
   let combined = [...overpassItems, ...nomItems];
 
-  // Filter out generic location/city names
+  // Filter out generic location/city names and street/road names
   const cityLower = city.toLowerCase().trim();
   const countryLower = country.toLowerCase().trim();
+  const streetSuffixes = ["road", "rd", "street", "st", "marg", "lane", "path", "avenue", "ave", "boulevard", "highway", "chowk", "circle", "flyover", "bypass", "expressway"];
   combined = combined.filter((item) => {
     if (!item.name) return false;
     const nLower = item.name.toLowerCase().trim();
     if (nLower === cityLower || nLower === countryLower || nLower === `${cityLower}, ${countryLower}`) {
+      return false;
+    }
+    const isPureStreetOrArea = streetSuffixes.some((suf) => nLower.endsWith(" " + suf) || nLower === suf);
+    if (isPureStreetOrArea && (item.category === "Local Business" || item.category === "unclassified" || item.category === "residential" || item.category === "tertiary")) {
       return false;
     }
     return true;
@@ -1423,6 +1449,7 @@ ${companyName}`;
 function AutomatedLeadCard({ lead, expanded, onToggle, draft, drafting, copied, onDraft, onCopy }) {
   const tier = scoreTier(lead.score);
   const intel = lead.intel;
+  const mapsTargetUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(lead.name + ", " + (lead.address || ""))}`;
 
   return (
     <div className="rounded-lg overflow-hidden transition-all shadow-md" style={{ background: "#162238", border: "1px solid #1E293B" }}>
@@ -1465,7 +1492,18 @@ function AutomatedLeadCard({ lead, expanded, onToggle, draft, drafting, copied, 
           </div>
 
           <div className="flex items-center gap-3 text-xs text-slate-400 mt-1 flex-wrap">
-            <span>{lead.address}</span>
+            <a
+              href={mapsTargetUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              className="flex items-center gap-1 text-teal-300 hover:text-teal-200 hover:underline transition-colors"
+              title="Open exact business pin on Google Maps"
+            >
+              <MapPin size={12} className="text-teal-400 flex-shrink-0" />
+              <span>{lead.address}</span>
+              <ExternalLink size={10} className="text-teal-400/80 flex-shrink-0" />
+            </a>
             <span className="text-slate-500 font-mono text-[11px]">• OSM Data ({lead.fetchedAt || "Snapshot"})</span>
           </div>
 
@@ -1584,6 +1622,15 @@ function AutomatedLeadCard({ lead, expanded, onToggle, draft, drafting, copied, 
           {/* Action Row with Direct Contacts */}
           <div className="flex items-center justify-between gap-4 pt-2 flex-wrap">
             <div className="flex items-center gap-3 text-xs text-slate-300 flex-wrap">
+              <a
+                href={mapsTargetUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 bg-slate-900 hover:bg-slate-800 px-2.5 py-1 rounded border border-slate-700 text-teal-300 font-mono hover:border-teal-500/60 transition-colors"
+                title="View place on Google Maps"
+              >
+                <MapPin size={12} className="text-teal-400" /> Google Maps <ExternalLink size={10} />
+              </a>
               {lead.phone && (
                 <span className="flex items-center gap-1 bg-slate-900 px-2.5 py-1 rounded border border-slate-700 text-teal-300 font-mono">
                   <Phone size={12} className="text-teal-400" /> {lead.phone}
