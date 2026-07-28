@@ -228,7 +228,7 @@ function getBusinessIntelligence(categoryTag, name, hasWebsite, phone) {
   ) {
     return {
       categoryName: "Food & Fast Food Outlet",
-      badgeColor: "#F2A93B",
+      badgeColor: "#2DD4BF",
       whatExists: {
         webStatus: hasWebsite ? "Basic web link present (No online ordering capability)" : "No website found — Relies 100% on walk-ins & aggregators",
         contactStatus: phone ? `Direct phone: ${phone}` : "No phone number registered online"
@@ -271,7 +271,7 @@ function getBusinessIntelligence(categoryTag, name, hasWebsite, phone) {
   ) {
     return {
       categoryName: "Restaurant / Cafe",
-      badgeColor: "#F59E0B",
+      badgeColor: "#0EA5E9",
       whatExists: {
         webStatus: hasWebsite ? "Basic static page (Outdated menu & no table booking)" : "No website found — Missing online diners and table reservations",
         contactStatus: phone ? `Direct phone: ${phone}` : "No phone number listed"
@@ -311,7 +311,7 @@ function getBusinessIntelligence(categoryTag, name, hasWebsite, phone) {
   ) {
     return {
       categoryName: "Clinic & Healthcare",
-      badgeColor: "#10B981",
+      badgeColor: "#14B8A6",
       whatExists: {
         webStatus: hasWebsite ? "Informational page only (No online booking or patient intake)" : "No website found — High patient phone calls & queue congestion",
         contactStatus: phone ? `Direct phone: ${phone}` : "No phone number listed"
@@ -349,7 +349,7 @@ function getBusinessIntelligence(categoryTag, name, hasWebsite, phone) {
   ) {
     return {
       categoryName: "Salon & Spa",
-      badgeColor: "#EC4899",
+      badgeColor: "#38BDF8",
       whatExists: {
         webStatus: hasWebsite ? "Basic portfolio page (No real-time stylist slot booking)" : "No website found — Idle stylist chairs during off-peak hours",
         contactStatus: phone ? `Direct phone: ${phone}` : "No phone number listed"
@@ -384,7 +384,7 @@ function getBusinessIntelligence(categoryTag, name, hasWebsite, phone) {
   ) {
     return {
       categoryName: "Gym & Fitness",
-      badgeColor: "#6366F1",
+      badgeColor: "#06B6D4",
       whatExists: {
         webStatus: hasWebsite ? "Basic info page (No member portal or fee payment)" : "No website found — Manual cash/UPI fee tracking and expired memberships",
         contactStatus: phone ? `Direct phone: ${phone}` : "No phone number listed"
@@ -422,7 +422,7 @@ function getBusinessIntelligence(categoryTag, name, hasWebsite, phone) {
   ) {
     return {
       categoryName: "Retail Store",
-      badgeColor: "#0EA5E9",
+      badgeColor: "#2DD4BF",
       whatExists: {
         webStatus: hasWebsite ? "Static store address page (No online store or catalog)" : "No website found — Offline store only, missing local online buyers",
         contactStatus: phone ? `Direct phone: ${phone}` : "No phone number listed"
@@ -508,9 +508,9 @@ function scoreOSMLead(item) {
 }
 
 function scoreTier(score) {
-  if (score >= 75) return { label: "Hot Lead", color: "#F2A93B" };
-  if (score >= 50) return { label: "Warm Lead", color: "#4FD1C5" };
-  return { label: "Cool Lead", color: "#6B7684" };
+  if (score >= 75) return { label: "Hot Lead", color: "#14B8A6" };
+  if (score >= 50) return { label: "Warm Lead", color: "#38BDF8" };
+  return { label: "Cool Lead", color: "#64748B" };
 }
 
 // 🌐 Geocode City Center Coordinates via Nominatim
@@ -1120,8 +1120,8 @@ ${companyName}`;
     <div
       className="min-h-screen w-full"
       style={{
-        background: "#12161C",
-        color: "#E7EAEE",
+        background: "#0B132B",
+        color: "#F1F5F9",
         fontFamily: "'IBM Plex Sans', system-ui, sans-serif"
       }}
     >
@@ -1132,17 +1132,17 @@ ${companyName}`;
       />
 
       {/* Header */}
-      <header className="border-b" style={{ borderColor: "#242B36" }}>
+      <header className="border-b" style={{ borderColor: "#1E293B" }}>
         <div className="max-w-6xl mx-auto px-6 py-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <div className="relative flex items-center justify-center" style={{ width: 34, height: 34 }}>
-              <Radar size={22} style={{ color: "#F2A93B" }} className={loading ? "animate-spin" : ""} />
+              <Radar size={22} style={{ color: "#2DD4BF" }} className={loading ? "animate-spin" : ""} />
             </div>
             <div>
               <h1 style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, fontSize: 21, letterSpacing: "-0.01em" }}>
-                Lead Scout <span style={{ fontSize: 11, background: "#1E293B", color: "#F2A93B", border: "1px solid #D97706", borderRadius: 12, padding: "2px 8px", marginLeft: 6, verticalAlign: "middle" }}>Automated Lead Engine</span>
+                Lead Scout <span style={{ fontSize: 11, background: "#0F2942", color: "#2DD4BF", border: "1px solid #0D9488", borderRadius: 12, padding: "2px 8px", marginLeft: 6, verticalAlign: "middle" }}>Automated Lead Engine</span>
               </h1>
-              <p style={{ fontSize: 12, color: "#6B7684", fontFamily: "'IBM Plex Mono', monospace" }}>
+              <p style={{ fontSize: 12, color: "#64748B", fontFamily: "'IBM Plex Mono', monospace" }}>
                 whole-city bbox search → real OSM contacts only → product roadmap & pricing
               </p>
             </div>
@@ -1151,8 +1151,8 @@ ${companyName}`;
           {/* Location Controls & Refresh Action */}
           <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
             {/* Country Selector */}
-            <div className="flex items-center gap-1.5 bg-slate-900 border border-slate-700 rounded px-2.5 py-1.5 text-xs text-white">
-              <Globe size={13} className="text-amber-400" />
+            <div className="flex items-center gap-1.5 bg-slate-900 border border-slate-700/80 rounded px-2.5 py-1.5 text-xs text-white">
+              <Globe size={13} className="text-teal-400" />
               <select
                 value={selectedCountry}
                 onChange={(e) => handleCountryChange(e.target.value)}
@@ -1167,8 +1167,8 @@ ${companyName}`;
             </div>
 
             {/* City / Region Selector */}
-            <div className="flex items-center gap-1.5 bg-slate-900 border border-slate-700 rounded px-2.5 py-1.5 text-xs text-white">
-              <MapPin size={13} className="text-amber-400" />
+            <div className="flex items-center gap-1.5 bg-slate-900 border border-slate-700/80 rounded px-2.5 py-1.5 text-xs text-white">
+              <MapPin size={13} className="text-teal-400" />
               {!isCustomMode ? (
                 <select
                   value={selectedCity}
@@ -1188,7 +1188,7 @@ ${companyName}`;
                       {ct}
                     </option>
                   ))}
-                  <option value="__CUSTOM__" className="bg-slate-900 text-amber-400 font-semibold">
+                  <option value="__CUSTOM__" className="bg-slate-900 text-teal-400 font-semibold">
                     + Search / Custom City...
                   </option>
                 </select>
@@ -1206,7 +1206,7 @@ ${companyName}`;
                   />
                   <button
                     onClick={() => runLeadScan(selectedCountry, customCity, niche, false)}
-                    className="px-2 py-0.5 rounded bg-amber-500 text-black font-semibold text-xs cursor-pointer"
+                    className="px-2 py-0.5 rounded bg-teal-500 hover:bg-teal-400 text-slate-950 font-bold text-xs cursor-pointer"
                   >
                     Go
                   </button>
@@ -1224,10 +1224,10 @@ ${companyName}`;
             {/* Toggle Custom Settings Panel */}
             <button
               onClick={() => setShowSearchForm(!showSearchForm)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-medium cursor-pointer"
-              style={{ border: "1px solid #2E3644", color: "#E7EAEE", background: "#1B212B" }}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-medium cursor-pointer transition-all"
+              style={{ border: "1px solid #1E293B", color: "#F1F5F9", background: "#162238" }}
             >
-              <Filter size={13} /> {showSearchForm ? "Hide Filters" : "Category / Niche Search"}
+              <Filter size={13} className="text-teal-400" /> {showSearchForm ? "Hide Filters" : "Category / Niche Search"}
             </button>
 
             {/* Refresh Button with Cooldown Handling */}
@@ -1236,7 +1236,7 @@ ${companyName}`;
               disabled={loading || cooldownRemaining > 0}
               className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded text-xs font-semibold shadow transition-all ${cooldownRemaining > 0
                   ? "bg-slate-800 text-gray-400 border border-slate-700 cursor-not-allowed"
-                  : "bg-amber-500 hover:bg-amber-400 text-black cursor-pointer"
+                  : "bg-teal-500 hover:bg-teal-400 text-slate-950 cursor-pointer shadow-teal-500/10"
                 }`}
               title={cooldownRemaining > 0 ? `Cooldown active (${cooldownRemaining}s remaining)` : "Refresh live OpenStreetMap data"}
             >
@@ -1251,22 +1251,22 @@ ${companyName}`;
       <main className="max-w-6xl mx-auto px-6 py-6 flex flex-col gap-6">
         {/* Custom Niche / Filter Form */}
         {showSearchForm && (
-          <div className="p-5 rounded-lg flex flex-col gap-4 shadow-lg" style={{ background: "#1B212B", border: "1px solid #2E3644" }}>
+          <div className="p-5 rounded-lg flex flex-col gap-4 shadow-lg" style={{ background: "#162238", border: "1px solid #1E293B" }}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <label className="flex flex-col gap-1 text-xs text-gray-400">
+              <label className="flex flex-col gap-1 text-xs text-slate-400">
                 <span>SPECIFIC BUSINESS TYPE OR KEYWORD</span>
                 <input
                   type="text"
                   placeholder="e.g. Shawarma, Cafe, Dental Clinic, Gym, Salon"
                   value={niche}
                   onChange={(e) => setNiche(e.target.value)}
-                  className="bg-slate-900 border border-slate-700 rounded p-2 text-sm text-white"
+                  className="bg-slate-900 border border-slate-700 rounded p-2 text-sm text-white focus:border-teal-500 outline-none"
                 />
               </label>
 
-              <label className="flex flex-col gap-1 text-xs text-gray-400">
+              <label className="flex flex-col gap-1 text-xs text-slate-400">
                 <span>CURRENT LOCATION HIERARCHY</span>
-                <div className="p-2 bg-slate-900 border border-slate-700 rounded text-sm text-amber-300 font-medium">
+                <div className="p-2 bg-slate-900 border border-slate-700 rounded text-sm text-teal-300 font-medium">
                   {selectedCountry} ➔ {activeCityName}
                 </div>
               </label>
@@ -1274,7 +1274,7 @@ ${companyName}`;
 
             <button
               onClick={() => runLeadScan(selectedCountry, activeCityName, niche, false)}
-              className="self-end px-5 py-2 rounded text-xs font-semibold bg-amber-500 text-black cursor-pointer shadow"
+              className="self-end px-5 py-2 rounded text-xs font-bold bg-teal-500 hover:bg-teal-400 text-slate-950 cursor-pointer shadow"
             >
               Apply Filter & Scan City
             </button>
@@ -1299,8 +1299,8 @@ ${companyName}`;
                 runLeadScan(selectedCountry, activeCityName, catBtn.n, false);
               }}
               className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap cursor-pointer transition-all ${niche === catBtn.n
-                  ? "bg-amber-500 text-black font-semibold shadow"
-                  : "bg-slate-800 text-gray-300 border border-slate-700 hover:border-amber-500/50"
+                  ? "bg-teal-500 text-slate-950 font-bold shadow-lg shadow-teal-500/20"
+                  : "bg-slate-800/80 text-slate-300 border border-slate-700/80 hover:border-teal-500/50"
                 }`}
             >
               {catBtn.label}
@@ -1309,21 +1309,21 @@ ${companyName}`;
         </div>
 
         {/* Status & Freshness Bar */}
-        <div className="flex flex-wrap items-center justify-between gap-4 p-4 rounded-lg" style={{ background: "#1B212B", border: "1px solid #242B36" }}>
+        <div className="flex flex-wrap items-center justify-between gap-4 p-4 rounded-lg" style={{ background: "#162238", border: "1px solid #1E293B" }}>
           <div>
             <div className="flex items-center gap-2 flex-wrap">
-              <span style={{ color: "#E7EAEE", fontWeight: 700, fontSize: 16 }}>
+              <span style={{ color: "#F1F5F9", fontWeight: 700, fontSize: 16 }}>
                 {filteredLeads.length} Verified Business Leads
               </span>
-              <span style={{ color: "#9AA3B0", fontSize: 13 }}>
-                in <strong style={{ color: "#F2A93B" }}>{activeCityName}, {selectedCountry}</strong> {niche ? `matching "${niche}"` : ""}
+              <span style={{ color: "#94A3B8", fontSize: 13 }}>
+                in <strong style={{ color: "#2DD4BF" }}>{activeCityName}, {selectedCountry}</strong> {niche ? `matching "${niche}"` : ""}
               </span>
             </div>
 
             {/* Data Freshness Notice & Cache Banner */}
             <div className="flex items-center gap-3 mt-1.5 flex-wrap">
-              <span className="inline-flex items-center gap-1 text-xs px-2.5 py-0.5 rounded bg-slate-900 text-amber-300 border border-slate-700 font-medium">
-                <Info size={12} className="text-amber-400" /> OpenStreetMap community data — may not reflect current status
+              <span className="inline-flex items-center gap-1 text-xs px-2.5 py-0.5 rounded bg-slate-900 text-teal-300 border border-slate-700 font-medium">
+                <Info size={12} className="text-teal-400" /> OpenStreetMap community data — may not reflect current status
               </span>
 
               {cacheInfo.isCached ? (
@@ -1331,13 +1331,13 @@ ${companyName}`;
                   <Clock size={12} /> {cacheInfo.cachedMinutesAgo === 0 ? "Cached just now" : `Cached ${cacheInfo.cachedMinutesAgo}m ago`} ({cacheInfo.fetchedAtTime})
                 </span>
               ) : (
-                <span className="inline-flex items-center gap-1 text-xs px-2.5 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-800 font-medium">
+                <span className="inline-flex items-center gap-1 text-xs px-2.5 py-0.5 rounded bg-teal-950 text-teal-300 border border-teal-800 font-medium">
                   <CheckCircle2 size={12} /> Fresh Live Scan ({cacheInfo.fetchedAtTime || "Just fetched"})
                 </span>
               )}
 
               {cooldownRemaining > 0 && (
-                <span className="inline-flex items-center gap-1 text-xs text-orange-400 font-mono">
+                <span className="inline-flex items-center gap-1 text-xs text-teal-400 font-mono">
                   <Clock size={11} /> Cooldown active ({cooldownRemaining}s)
                 </span>
               )}
@@ -1345,12 +1345,12 @@ ${companyName}`;
           </div>
 
           <div className="flex items-center gap-4">
-            <label className="flex items-center gap-2 cursor-pointer text-xs" style={{ color: "#9AA3B0" }}>
+            <label className="flex items-center gap-2 cursor-pointer text-xs" style={{ color: "#94A3B8" }}>
               <input
                 type="checkbox"
                 checked={filterNoWebsiteOnly}
                 onChange={(e) => setFilterNoWebsiteOnly(e.target.checked)}
-                className="rounded border-gray-700 bg-gray-900 accent-amber-500 cursor-pointer"
+                className="rounded border-gray-700 bg-gray-900 accent-teal-500 cursor-pointer"
               />
               No website only
             </label>
@@ -1358,8 +1358,8 @@ ${companyName}`;
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="text-xs rounded px-2.5 py-1.5 cursor-pointer"
-              style={{ background: "#12161C", border: "1px solid #2E3644", color: "#E7EAEE" }}
+              className="text-xs rounded px-2.5 py-1.5 cursor-pointer outline-none"
+              style={{ background: "#0F172A", border: "1px solid #1E293B", color: "#F1F5F9" }}
             >
               <option value="score">Sort: Highest Potential Score</option>
               <option value="name">Sort: Business Name</option>
@@ -1371,12 +1371,12 @@ ${companyName}`;
         {/* Progress Indicator during Parallel Queries */}
         {loading && (
           <div className="flex flex-col items-center justify-center py-16 gap-4">
-            <Loader2 size={36} className="animate-spin text-amber-500" />
+            <Loader2 size={36} className="animate-spin text-teal-400" />
             <div className="flex flex-col items-center gap-1 text-center">
-              <p style={{ color: "#E7EAEE", fontFamily: "'Space Grotesk', sans-serif", fontSize: 16, fontWeight: 600 }}>
+              <p style={{ color: "#F1F5F9", fontFamily: "'Space Grotesk', sans-serif", fontSize: 16, fontWeight: 600 }}>
                 {scanStatus.status || "Scanning city leads..."}
               </p>
-              <p className="text-xs text-gray-400 font-mono">
+              <p className="text-xs text-slate-400 font-mono">
                 Executing parallel fast queries & validating contacts...
               </p>
             </div>
@@ -1408,7 +1408,7 @@ ${companyName}`;
             ))}
 
             {filteredLeads.length === 0 && !loading && (
-              <div className="text-center py-12 bg-slate-900/50 rounded-lg border border-slate-800 text-gray-400 text-sm">
+              <div className="text-center py-12 bg-slate-900/50 rounded-lg border border-slate-800 text-slate-400 text-sm">
                 No business leads found matching your criteria in {activeCityName}. Try clearing your category filter or selecting another city.
               </div>
             )}
@@ -1425,7 +1425,7 @@ function AutomatedLeadCard({ lead, expanded, onToggle, draft, drafting, copied, 
   const intel = lead.intel;
 
   return (
-    <div className="rounded-lg overflow-hidden transition-all shadow-md" style={{ background: "#1B212B", border: "1px solid #242B36" }}>
+    <div className="rounded-lg overflow-hidden transition-all shadow-md" style={{ background: "#162238", border: "1px solid #1E293B" }}>
       {/* Lead Card Header Summary */}
       <div className="flex items-center gap-4 px-5 py-4 cursor-pointer hover:bg-slate-800/40" onClick={onToggle}>
         <div className="flex flex-col items-center justify-center flex-shrink-0" style={{ width: 48 }}>
@@ -1439,14 +1439,14 @@ function AutomatedLeadCard({ lead, expanded, onToggle, draft, drafting, copied, 
 
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
-            <span style={{ fontWeight: 700, fontSize: 16.5, color: "#E7EAEE" }}>{lead.name}</span>
+            <span style={{ fontWeight: 700, fontSize: 16.5, color: "#F1F5F9" }}>{lead.name}</span>
             <span
               style={{
                 fontSize: 11,
                 padding: "2px 8px",
                 borderRadius: 4,
-                background: "#242B36",
-                color: "#9AA3B0",
+                background: "#0F172A",
+                color: "#94A3B8",
                 textTransform: "capitalize"
               }}
             >
@@ -1454,28 +1454,28 @@ function AutomatedLeadCard({ lead, expanded, onToggle, draft, drafting, copied, 
             </span>
 
             {lead.hasWebsite ? (
-              <span className="flex items-center gap-1 text-xs" style={{ color: "#4FD1C5" }}>
+              <span className="flex items-center gap-1 text-xs" style={{ color: "#2DD4BF" }}>
                 <Globe size={12} /> Has Website
               </span>
             ) : (
-              <span className="flex items-center gap-1 text-xs px-2 py-0.5 rounded font-medium" style={{ color: "#F2A93B", background: "#332412" }}>
+              <span className="flex items-center gap-1 text-xs px-2 py-0.5 rounded font-medium" style={{ color: "#38BDF8", background: "#0F2942" }}>
                 <GlobeLock size={12} /> No Website
               </span>
             )}
           </div>
 
-          <div className="flex items-center gap-3 text-xs text-gray-400 mt-1 flex-wrap">
+          <div className="flex items-center gap-3 text-xs text-slate-400 mt-1 flex-wrap">
             <span>{lead.address}</span>
-            <span className="text-gray-500 font-mono text-[11px]">• OSM Data ({lead.fetchedAt || "Snapshot"})</span>
+            <span className="text-slate-500 font-mono text-[11px]">• OSM Data ({lead.fetchedAt || "Snapshot"})</span>
           </div>
 
-          {/* Quick Contact Bar on Header — only ever shows real OSM data */}
+          {/* Quick Contact Bar on Header */}
           <div className="flex items-center gap-3 mt-1.5 text-xs flex-wrap">
-            <span className={`inline-flex items-center gap-1 font-mono bg-slate-900/80 px-2 py-0.5 rounded border border-slate-700/60 text-[11px] ${lead.phone ? "text-amber-300" : "text-gray-500 italic"}`}>
-              <Phone size={11} className={lead.phone ? "text-amber-400" : "text-gray-500"} /> {lead.phone || "Phone not listed"}
+            <span className={`inline-flex items-center gap-1 font-mono bg-slate-900/80 px-2 py-0.5 rounded border border-slate-700/60 text-[11px] ${lead.phone ? "text-teal-300" : "text-slate-500 italic"}`}>
+              <Phone size={11} className={lead.phone ? "text-teal-400" : "text-slate-500"} /> {lead.phone || "Phone not listed"}
             </span>
-            <span className={`inline-flex items-center gap-1 font-mono bg-slate-900/80 px-2 py-0.5 rounded border border-slate-700/60 text-[11px] ${lead.email ? "text-cyan-300" : "text-gray-500 italic"}`}>
-              <Mail size={11} className={lead.email ? "text-cyan-400" : "text-gray-500"} /> {lead.email || "Email not listed"}
+            <span className={`inline-flex items-center gap-1 font-mono bg-slate-900/80 px-2 py-0.5 rounded border border-slate-700/60 text-[11px] ${lead.email ? "text-cyan-300" : "text-slate-500 italic"}`}>
+              <Mail size={11} className={lead.email ? "text-cyan-400" : "text-slate-500"} /> {lead.email || "Email not listed"}
             </span>
           </div>
         </div>
@@ -1483,76 +1483,76 @@ function AutomatedLeadCard({ lead, expanded, onToggle, draft, drafting, copied, 
         <div className="flex items-center gap-3 flex-shrink-0">
           <span
             className="hidden md:inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded font-semibold"
-            style={{ background: "#151F2C", border: `1px solid ${intel.badgeColor}44`, color: intel.badgeColor }}
+            style={{ background: "#0F2942", border: `1px solid ${intel.badgeColor}44`, color: intel.badgeColor }}
           >
             <Sparkles size={13} /> {intel.whatCanBeMade.saasTitle}
           </span>
-          {expanded ? <ChevronUp size={18} color="#6B7684" /> : <ChevronDown size={18} color="#6B7684" />}
+          {expanded ? <ChevronUp size={18} color="#64748B" /> : <ChevronDown size={18} color="#64748B" />}
         </div>
       </div>
 
       {/* Expanded Deep Lead Intelligence */}
       {expanded && (
-        <div className="px-5 pb-5 flex flex-col gap-4" style={{ borderTop: "1px solid #242B36", paddingTop: 16 }}>
+        <div className="px-5 pb-5 flex flex-col gap-4" style={{ borderTop: "1px solid #1E293B", paddingTop: 16 }}>
           {/* Grid Layout: What Already Exists vs What This Org Needs */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Box 1: What Already Exists */}
-            <div className="p-4 rounded-lg flex flex-col gap-2" style={{ background: "#131922", border: "1px solid #242B36" }}>
-              <div className="flex items-center gap-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                <Globe size={14} className="text-amber-400" /> 1. What Already Exists
+            <div className="p-4 rounded-lg flex flex-col gap-2" style={{ background: "#0F172A", border: "1px solid #1E293B" }}>
+              <div className="flex items-center gap-2 text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                <Globe size={14} className="text-teal-400" /> 1. What Already Exists
               </div>
-              <div className="text-xs text-gray-300 font-medium">
+              <div className="text-xs text-slate-300 font-medium">
                 • {intel.whatExists.webStatus}
               </div>
-              <div className="text-xs text-gray-300 flex items-center gap-1 font-mono">
-                • Phone: {lead.phone ? <span className="text-amber-300">{lead.phone}</span> : <span className="text-gray-500 italic">not listed on OSM</span>}
+              <div className="text-xs text-slate-300 flex items-center gap-1 font-mono">
+                • Phone: {lead.phone ? <span className="text-teal-300">{lead.phone}</span> : <span className="text-slate-500 italic">not listed on OSM</span>}
               </div>
-              <div className="text-xs text-gray-300 flex items-center gap-1 font-mono">
-                • Email: {lead.email ? <span className="text-cyan-300">{lead.email}</span> : <span className="text-gray-500 italic">not listed on OSM</span>}
+              <div className="text-xs text-slate-300 flex items-center gap-1 font-mono">
+                • Email: {lead.email ? <span className="text-cyan-300">{lead.email}</span> : <span className="text-slate-500 italic">not listed on OSM</span>}
               </div>
             </div>
 
             {/* Box 2: What This Org Needs */}
-            <div className="p-4 rounded-lg flex flex-col gap-2" style={{ background: "#131922", border: "1px solid #242B36" }}>
-              <div className="flex items-center gap-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                <AlertCircle size={14} className="text-red-400" /> 2. What This Org Needs
+            <div className="p-4 rounded-lg flex flex-col gap-2" style={{ background: "#0F172A", border: "1px solid #1E293B" }}>
+              <div className="flex items-center gap-2 text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                <AlertCircle size={14} className="text-cyan-400" /> 2. What This Org Needs
               </div>
-              <div className="text-xs text-amber-200/90 leading-relaxed font-medium">
+              <div className="text-xs text-cyan-200/90 leading-relaxed font-medium">
                 {intel.whatIsNeeded}
               </div>
             </div>
           </div>
 
           {/* Box 3: What Can Be Made (Product Roadmap) */}
-          <div className="p-4 rounded-lg flex flex-col gap-3" style={{ background: "#131922", border: `1px solid ${intel.badgeColor}44` }}>
-            <div className="flex items-center justify-between border-b pb-2.5" style={{ borderColor: "#242B36" }}>
+          <div className="p-4 rounded-lg flex flex-col gap-3" style={{ background: "#0F172A", border: `1px solid ${intel.badgeColor}44` }}>
+            <div className="flex items-center justify-between border-b pb-2.5" style={{ borderColor: "#1E293B" }}>
               <div className="flex items-center gap-2">
                 <Wrench size={16} style={{ color: intel.badgeColor }} />
                 <span style={{ fontWeight: 700, fontSize: 14.5, color: intel.badgeColor }}>
                   3. Solution Roadmap: {intel.whatCanBeMade.saasTitle}
                 </span>
               </div>
-              <span style={{ fontSize: 11, color: "#6B7684", fontFamily: "'IBM Plex Mono', monospace" }}>
+              <span style={{ fontSize: 11, color: "#64748B", fontFamily: "'IBM Plex Mono', monospace" }}>
                 {intel.categoryName}
               </span>
             </div>
 
             {/* Website Strategy */}
             <div>
-              <div style={{ fontSize: 11.5, color: "#9AA3B0", fontWeight: 600, textTransform: "uppercase" }}>
+              <div style={{ fontSize: 11.5, color: "#94A3B8", fontWeight: 600, textTransform: "uppercase" }}>
                 🌐 Proposed Website Strategy
               </div>
-              <div style={{ fontSize: 13, color: "#E7EAEE", marginTop: 2 }}>{intel.whatCanBeMade.websiteStrategy}</div>
+              <div style={{ fontSize: 13, color: "#F1F5F9", marginTop: 2 }}>{intel.whatCanBeMade.websiteStrategy}</div>
             </div>
 
             {/* SaaS Features */}
             <div>
-              <div style={{ fontSize: 11.5, color: "#9AA3B0", fontWeight: 600, textTransform: "uppercase" }}>
+              <div style={{ fontSize: 11.5, color: "#94A3B8", fontWeight: 600, textTransform: "uppercase" }}>
                 ⚙️ Custom SaaS Product Modules
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-2">
                 {intel.whatCanBeMade.saasModules.map((mod, idx) => (
-                  <div key={idx} className="flex items-start gap-2 text-xs text-gray-300">
+                  <div key={idx} className="flex items-start gap-2 text-xs text-slate-300">
                     <CheckCircle2 size={13} style={{ color: intel.badgeColor, flexShrink: 0, marginTop: 2 }} />
                     <span>{mod}</span>
                   </div>
@@ -1561,32 +1561,32 @@ function AutomatedLeadCard({ lead, expanded, onToggle, draft, drafting, copied, 
             </div>
 
             {/* Pricing & ROI Breakdown */}
-            <div className="mt-1 pt-3 border-t grid grid-cols-1 md:grid-cols-3 gap-3" style={{ borderColor: "#242B36" }}>
-              <div className="rounded p-2.5" style={{ background: "#1B212B", border: "1px solid #2E3644" }}>
-                <div style={{ fontSize: 11, color: "#9AA3B0" }}>Website Build (Est. Starting Price)</div>
-                <div style={{ fontSize: 13, fontWeight: 700, color: "#4FD1C5" }}>{intel.pricing.websiteFee}</div>
+            <div className="mt-1 pt-3 border-t grid grid-cols-1 md:grid-cols-3 gap-3" style={{ borderColor: "#1E293B" }}>
+              <div className="rounded p-2.5" style={{ background: "#162238", border: "1px solid #1E293B" }}>
+                <div style={{ fontSize: 11, color: "#94A3B8" }}>Website Build (Est. Starting Price)</div>
+                <div style={{ fontSize: 13, fontWeight: 700, color: "#38BDF8" }}>{intel.pricing.websiteFee}</div>
               </div>
-              <div className="rounded p-2.5" style={{ background: "#1B212B", border: "1px solid #2E3644" }}>
-                <div style={{ fontSize: 11, color: "#9AA3B0" }}>SaaS Setup (Est. Starting Price)</div>
-                <div style={{ fontSize: 13, fontWeight: 700, color: "#F2A93B" }}>{intel.pricing.saasSetupFee}</div>
+              <div className="rounded p-2.5" style={{ background: "#162238", border: "1px solid #1E293B" }}>
+                <div style={{ fontSize: 11, color: "#94A3B8" }}>SaaS Setup (Est. Starting Price)</div>
+                <div style={{ fontSize: 13, fontWeight: 700, color: "#2DD4BF" }}>{intel.pricing.saasSetupFee}</div>
               </div>
-              <div className="rounded p-2.5" style={{ background: "#1B212B", border: "1px solid #2E3644" }}>
-                <div style={{ fontSize: 11, color: "#9AA3B0" }}>Monthly SaaS (Est. Range)</div>
-                <div style={{ fontSize: 13, fontWeight: 700, color: "#E599F7" }}>{intel.pricing.saasMonthly}</div>
+              <div className="rounded p-2.5" style={{ background: "#162238", border: "1px solid #1E293B" }}>
+                <div style={{ fontSize: 11, color: "#94A3B8" }}>Monthly SaaS (Est. Range)</div>
+                <div style={{ fontSize: 13, fontWeight: 700, color: "#818CF8" }}>{intel.pricing.saasMonthly}</div>
               </div>
             </div>
 
-            <div className="flex items-center gap-1.5 text-xs text-emerald-400 font-medium">
+            <div className="flex items-center gap-1.5 text-xs text-teal-400 font-medium">
               <TrendingUp size={14} /> Estimated Business Impact & ROI Range: {intel.pricing.estimatedRoi}
             </div>
           </div>
 
           {/* Action Row with Direct Contacts */}
           <div className="flex items-center justify-between gap-4 pt-2 flex-wrap">
-            <div className="flex items-center gap-3 text-xs text-gray-300 flex-wrap">
+            <div className="flex items-center gap-3 text-xs text-slate-300 flex-wrap">
               {lead.phone && (
-                <span className="flex items-center gap-1 bg-slate-900 px-2.5 py-1 rounded border border-slate-700 text-amber-300 font-mono">
-                  <Phone size={12} className="text-amber-400" /> {lead.phone}
+                <span className="flex items-center gap-1 bg-slate-900 px-2.5 py-1 rounded border border-slate-700 text-teal-300 font-mono">
+                  <Phone size={12} className="text-teal-400" /> {lead.phone}
                 </span>
               )}
               {lead.email && (
@@ -1595,10 +1595,10 @@ function AutomatedLeadCard({ lead, expanded, onToggle, draft, drafting, copied, 
                 </span>
               )}
               {!lead.phone && !lead.email && (
-                <span className="text-gray-500 italic">No phone or email listed on OSM for this business</span>
+                <span className="text-slate-500 italic">No phone or email listed on OSM for this business</span>
               )}
               {lead.website && (
-                <a href={lead.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-cyan-400 hover:underline">
+                <a href={lead.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-teal-400 hover:underline">
                   <Globe size={12} /> {lead.website.replace(/^https?:\/\//, "")} <ExternalLink size={10} />
                 </a>
               )}
@@ -1617,7 +1617,7 @@ function AutomatedLeadCard({ lead, expanded, onToggle, draft, drafting, copied, 
               <div className="flex items-center gap-2">
                 <button
                   onClick={onCopy}
-                  className="flex items-center gap-1.5 rounded px-3.5 py-1.5 text-xs font-bold bg-amber-500 text-black cursor-pointer shadow"
+                  className="flex items-center gap-1.5 rounded px-3.5 py-1.5 text-xs font-bold bg-teal-500 hover:bg-teal-400 text-slate-950 cursor-pointer shadow"
                 >
                   {copied ? <Check size={13} /> : <Copy size={13} />} {copied ? "Copied!" : "Copy Proposal Email"}
                 </button>
