@@ -1,48 +1,45 @@
 /**
  * Vercel Serverless Function: /api/geocode
  *
- * Proxies geocoding requests to Google Maps Geocoding API.
- * The API key never leaves the server — the browser only sees
- * the normalized coordinates/address that come back.
+ * Resolves a location to coordinates via Google Maps Geocoding API.
+ * Accepts either a text address OR a Google place_id (from autocomplete).
+ * The API key never leaves the server.
  *
- * Query params:
- *   address (string) — text location, e.g. "Bandra, Mumbai"
+ * Query params (one of the two is required):
+ *   address  (string) — text location, e.g. "Bandra West, Mumbai"
+ *   placeId  (string) — Google place_id from autocomplete, e.g. "ChIJ..."
  *
  * Returns:
- *   { lat, lng, formattedAddress, placeId }
- *   or { error: "..." } with an appropriate HTTP status
+ *   { lat, lng, formattedAddress, placeId, city, region, country, postalCode }
+ *   or { error: "..." }
  */
 export default async function handler(req, res) {
-  // CORS headers so the Vite dev server (different port) can reach this
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
-  if (req.method === "OPTIONS") {
-    return res.status(200).end();
-  }
-
-  if (req.method !== "GET") {
-    return res.status(405).json({ error: "Method not allowed" });
-  }
+  if (req.method === "OPTIONS") return res.status(200).end();
+  if (req.method !== "GET") return res.status(405).json({ error: "Method not allowed" });
 
   const apiKey = process.env.GOOGLE_PLACES_API_KEY;
   if (!apiKey) {
     return res.status(500).json({
-      error:
-        "Google Places API key is not configured. Set GOOGLE_PLACES_API_KEY in your environment variables.",
+      error: "Location service is not configured. Set GOOGLE_PLACES_API_KEY in your environment.",
     });
   }
 
-  const { address } = req.query;
-  if (!address || typeof address !== "string" || !address.trim()) {
-    return res.status(400).json({ error: "Missing required query parameter: address" });
+  const { address, placeId } = req.query;
+
+  if (!address && !placeId) {
+    return res.status(400).json({ error: "Provide either address or placeId" });
   }
 
-  const trimmed = address.trim().slice(0, 200); // prevent abuse
-
   const url = new URL("https://maps.googleapis.com/maps/api/geocode/json");
-  url.searchParams.set("address", trimmed);
+  if (placeId) {
+    url.searchParams.set("place_id", placeId.trim().slice(0, 300));
+  } else {
+    url.searchParams.set("address", address.trim().slice(0, 200));
+  }
   url.searchParams.set("key", apiKey);
 
   let data;
@@ -59,33 +56,45 @@ export default async function handler(req, res) {
     return res.status(502).json({ error: "Failed to reach geocoding service" });
   }
 
-  // Google-specific error handling — never expose the key in any message
-  if (data.status === "REQUEST_DENIED") {
-    return res.status(403).json({
-      error:
-        "Google Geocoding API access denied. Verify that the Geocoding API is enabled for GOOGLE_PLACES_API_KEY.",
-    });
-  }
-  if (data.status === "OVER_DAILY_LIMIT" || data.status === "OVER_QUERY_LIMIT") {
-    return res.status(429).json({ error: "Google API quota exceeded. Try again later." });
-  }
-  if (data.status === "INVALID_REQUEST") {
-    return res.status(400).json({ error: "Invalid location query" });
-  }
-  if (data.status === "ZERO_RESULTS" || !data.results || data.results.length === 0) {
-    return res.status(404).json({ error: "Location not found. Try a more specific address." });
-  }
-  if (data.status !== "OK") {
-    return res.status(502).json({ error: "Geocoding failed. Please try again." });
+  switch (data.status) {
+    case "OK":
+      break;
+    case "ZERO_RESULTS":
+      return res.status(404).json({ error: "Location not found. Try a more specific address." });
+    case "REQUEST_DENIED":
+      return res.status(403).json({
+        error: "Geocoding API access denied. Verify GOOGLE_PLACES_API_KEY has the Geocoding API enabled.",
+      });
+    case "OVER_DAILY_LIMIT":
+    case "OVER_QUERY_LIMIT":
+      return res.status(429).json({ error: "Geocoding quota exceeded. Try again later." });
+    case "INVALID_REQUEST":
+      return res.status(400).json({ error: "Invalid location query" });
+    default:
+      return res.status(502).json({ error: "Geocoding failed. Please try again." });
   }
 
   const result = data.results[0];
   const loc = result.geometry.location;
+
+  // Parse address components
+  let city = null, region = null, country = null, postalCode = null;
+  for (const comp of result.address_components || []) {
+    const t = comp.types || [];
+    if (t.includes("locality")) city = comp.long_name;
+    else if (t.includes("administrative_area_level_1")) region = comp.long_name;
+    else if (t.includes("country")) country = comp.long_name;
+    else if (t.includes("postal_code")) postalCode = comp.long_name;
+  }
 
   return res.status(200).json({
     lat: loc.lat,
     lng: loc.lng,
     formattedAddress: result.formatted_address,
     placeId: result.place_id,
+    city,
+    region,
+    country,
+    postalCode,
   });
 }

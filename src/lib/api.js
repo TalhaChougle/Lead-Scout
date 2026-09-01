@@ -1,19 +1,39 @@
 /**
  * Frontend API client — all requests go through Vercel serverless routes.
- * The browser never calls Google directly; it never sees the API key.
+ * The browser never calls Google directly and never sees the API key.
  */
 
 const BASE = typeof window !== "undefined" ? "" : "http://localhost:3000";
 
 /**
- * Resolve a text location to coordinates via /api/geocode.
+ * Get location autocomplete suggestions via /api/autocomplete.
  *
- * @param {string} address  - e.g. "Bandra, Mumbai"
- * @returns {{ lat: number, lng: number, formattedAddress: string, placeId: string }}
- * @throws Error with a user-friendly message
+ * @param {string} input  - partial location text, e.g. "Bandra"
+ * @param {AbortSignal} signal
+ * @returns {{ suggestions: Array<{ placeId, description, mainText, secondaryText }> }}
  */
-export async function geocodeLocation(address, signal) {
-  const url = `${BASE}/api/geocode?address=${encodeURIComponent(address)}`;
+export async function autocompleteLocation(input, signal) {
+  const url = `${BASE}/api/autocomplete?input=${encodeURIComponent(input)}`;
+  const res = await fetch(url, { signal });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || "Location search failed");
+  return data;
+}
+
+/**
+ * Resolve a place_id (from autocomplete) OR a text address to coordinates.
+ *
+ * @param {{ placeId?: string, address?: string }} params
+ * @param {AbortSignal} signal
+ * @returns {{ lat, lng, formattedAddress, placeId, city, region, country }}
+ */
+export async function geocodeLocation({ placeId, address }, signal) {
+  const params = new URLSearchParams();
+  if (placeId) params.set("placeId", placeId);
+  else if (address) params.set("address", address);
+  else throw new Error("Provide placeId or address");
+
+  const url = `${BASE}/api/geocode?${params.toString()}`;
   const res = await fetch(url, { signal });
   const data = await res.json();
   if (!res.ok) throw new Error(data.error || "Location not found");
@@ -24,16 +44,14 @@ export async function geocodeLocation(address, signal) {
  * Search for businesses via /api/search.
  *
  * @param {{ lat, lng, keyword, radiusMetres }} params
- * @param {string|null} pagetoken  - pass to fetch next page
+ * @param {string|null} pagetoken
+ * @param {AbortSignal} signal
  * @returns {{ results, nextPageToken, totalFound }}
- * @throws Error with a user-friendly message
  */
 export async function searchBusinesses({ lat, lng, keyword, radiusMetres }, pagetoken, signal) {
   const params = new URLSearchParams();
-
   if (pagetoken) {
     params.set("pagetoken", pagetoken);
-    // lat/lng are still needed for validation in some edge cases
     if (lat != null) params.set("lat", String(lat));
     if (lng != null) params.set("lng", String(lng));
   } else {
@@ -42,7 +60,6 @@ export async function searchBusinesses({ lat, lng, keyword, radiusMetres }, page
     params.set("keyword", keyword);
     params.set("radius", String(radiusMetres));
   }
-
   const url = `${BASE}/api/search?${params.toString()}`;
   const res = await fetch(url, { signal });
   const data = await res.json();
@@ -52,11 +69,9 @@ export async function searchBusinesses({ lat, lng, keyword, radiusMetres }, page
 
 /**
  * Fetch full place details (phone, website, hours) via /api/details.
- * Batched per-lead enrichment — one call per lead.
  *
  * @param {string} placeId
- * @returns enriched fields object
- * @throws Error with a user-friendly message
+ * @param {AbortSignal} signal
  */
 export async function fetchPlaceDetails(placeId, signal) {
   const url = `${BASE}/api/details?placeId=${encodeURIComponent(placeId)}`;
