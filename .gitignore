@@ -1,0 +1,23 @@
+# Dependencies
+node_modules
+.pnpm-store
+
+# Production build outputs
+dist
+dist-ssr
+
+# Environment files — never commit real secrets
+# .env.example is the only env file that should be committed (it has no real values)
+.env
+.env.local
+.env.*.local
+.env.development
+.env.production
+.env.staging
+
+# Editor / System
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.log
